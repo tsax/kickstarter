@@ -93,7 +93,7 @@ module Kickstarter
       @pledge_percent ||= begin
         if node
           # node.css('.project-stats li strong').inner_html.gsub(/\,/,"").to_i * 1.0
-          node.css('.project-stats-value').children[0].text.to_i * 1.0
+          node.css('.project-stats-value').children[0].text.to_f
         else
           pledge_amount * 1.0 / pledge_goal * 100.0
         end
