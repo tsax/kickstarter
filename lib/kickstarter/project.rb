@@ -32,7 +32,8 @@ module Kickstarter
     end
     
     def description
-      @description ||= node ? node.css('h2 + p').inner_html : nil
+      # @description ||= node ? node.css('h2 + p').inner_html : nil
+      @description ||= node ? node.css('.project-blurb').children[0].text.strip : nil
     end
     
     def url
