@@ -48,7 +48,7 @@ module Kickstarter
       # @category ||= node.css('.category').attribute('data-project-parent-category').value.strip
       # @category ||= details_page.css('.category a').children[1].text.strip
 
-      c_array = details_page.css('.grey-dark').css('.mr3').css('.nowrap')[1].attribute('href').value[21..-14].split('/')
+      c_array = details_page.css('.grey-dark').css('.mr2').css('.nowrap')[1].attribute('href').value[21..-14].split('/')
       if (c_array.length > 1)
         c_array[0] = c_array[0].split('%20').each { |c| c.capitalize! }.join(' ')
         c_array[1] = c_array[1].split('%20').each { |c| c.capitalize! }.join(' ')
