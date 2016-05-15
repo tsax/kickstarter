@@ -67,7 +67,8 @@ module Kickstarter
         if node
           # node.css('h2 span').first.inner_html.gsub(/by/, "").strip
           # node.css('.project-card-interior p').children[0].text[4..-2]
-          node.css('.project-byline').children.text[4..-2]
+          # node.css('.project-byline').children.text[4..-2]
+          node.css('.project-byline').children.text
         end
       end
     end
