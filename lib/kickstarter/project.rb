@@ -1,9 +1,9 @@
 module Kickstarter
-  
+
   class Project
 
     attr_reader :node
-    
+
     def initialize(*args)
       case args[0]
       when String
@@ -14,28 +14,28 @@ module Kickstarter
         raise TypeError
       end
     end
-    
+
     def id
       @id ||= begin
         if node
-          /\/projects\/([0-9]+)\/photo-little\.jpg/.match(thumbnail_url)[1].to_i 
+          /\/projects\/([0-9]+)\/photo-little\.jpg/.match(thumbnail_url)[1].to_i
         else
           details_page.css(".this_project_id").inner_html.to_i
         end
       end
     end
-    
+
     def name
       # @name ||= node ? node_link.inner_html : details_page.css("#headrow h1#name a").inner_html
       @name ||= node.css('.project-title a')[0].children[0].text
 
     end
-    
+
     def description
       # @description ||= node ? node.css('h2 + p').inner_html : nil
       @description ||= node ? node.css('.project-blurb').children[0].text.strip : nil
     end
-    
+
     def url
       @url ||= begin
         path = node ? node.css('.project-title a').attr('href').value.to_s : details_page.css("#headrow h1#name a").attr("href").value
@@ -43,12 +43,12 @@ module Kickstarter
         File.join(Kickstarter::BASE_URL, path.split('?').first)
       end
     end
-    
+
     def category
       # @category ||= node.css('.category').attribute('data-project-parent-category').value.strip
       # @category ||= details_page.css('.category a').children[1].text.strip
 
-      c_array = details_page.css('.grey-dark').css('.mr2').css('.nowrap')[1].attribute('href').value[21..-14].split('/')
+      c_array = details_page.css('.grey-dark').css('.mr3').css('.nowrap')[1].attribute('href').value[21..-14].split('/')
       if (c_array.length > 1)
         c_array[0] = c_array[0].split('%20').each { |c| c.capitalize! }.join(' ')
         c_array[1] = c_array[1].split('%20').each { |c| c.capitalize! }.join(' ')
@@ -61,7 +61,7 @@ module Kickstarter
     def handle
       @handle ||= url.split('/projects/').last.gsub(/\/$/,"")
     end
-    
+
     def owner
       @owner ||= begin
         if node
@@ -72,7 +72,7 @@ module Kickstarter
         end
       end
     end
-    
+
     def thumbnail_url
       @thumbnail_url ||= begin
         if node
@@ -80,7 +80,7 @@ module Kickstarter
         end
       end
     end
-    
+
     def pledge_amount
       @pledge_amount ||= begin
         if node
@@ -90,7 +90,7 @@ module Kickstarter
         end
       end
     end
-    
+
     def pledge_percent
       @pledge_percent ||= begin
         if node
@@ -101,7 +101,7 @@ module Kickstarter
         end
       end
     end
-    
+
     # can be X days|hours left
     # or <strong>FUNDED</strong> Aug 12, 2011
     def pledge_deadline
@@ -143,27 +143,27 @@ module Kickstarter
     def inspect
       to_hash.inspect
     end
-    
+
     #######################################################
     # Methods below *REQUIRE* a fetch of the details page #
-    
+
     def details_page
       @details_page ||= seed_url ? Project.fetch_details(seed_url) : Project.fetch_details(url)
     end
-    
+
     def pledge_goal
       @pledge_goal ||= Integer(/pledged of \$([0-9\.\,]+) goal/.match(node.css("#moneyraised").inner_html)[1].gsub(/,/,""))
     end
-    
+
     def exact_pledge_deadline
       @exact_pledge_deadline ||= Time.parse(details_page.css(".ksr_page_timer").attr("data-end_time").value)
     end
-    
+
     # Note: Not all projects are assigned short_urls.
     def short_url
       @short_url ||= details_page.css("#share_a_link").attr("value").value
     end
-    
+
     def about
       if @about.nil?
         node = details_page.css('#about')
@@ -173,7 +173,7 @@ module Kickstarter
         @about
       end
     end
-    
+
     def tiers
       retries = 0
       results = []
@@ -188,18 +188,18 @@ module Kickstarter
       end
       results
     end
-    
+
     #######################################################
     private
     #######################################################
-    
+
     attr_reader :seed_url
-    
+
     def node_link
       # node.css('h2 a').first
       node.css('project-title a').first
     end
-    
+
     def self.fetch_details(url)
       retries = 0
       begin
@@ -209,7 +209,7 @@ module Kickstarter
         retry if retries < 3
       end
     end
-    
+
   end
-  
+
 end
